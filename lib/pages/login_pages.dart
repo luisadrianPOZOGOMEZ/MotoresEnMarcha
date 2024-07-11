@@ -28,56 +28,110 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     //final ThemeData theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Motores en Marcha'),
-      ),
-      body: Padding (
+      body: Container (
+        color: Color.fromARGB(255, 255, 244, 212),
         padding: const EdgeInsets.all(16.0),
-        child: Card(
-          child: Form(
+        child: Center(
+          child: SingleChildScrollView(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
+                Text(
+                  'Inicio de Sesión',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 20,),
+                Image.asset(
+                  'lib/assets/childlogin.gif',
+                  height: 260,
+                  width: 245,
+                ),
+                SizedBox(height: 20,),
                 TextFormField(
                   decoration: InputDecoration(
                     labelText: 'Correo',
+                    labelStyle: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    fillColor: Colors.white,
+                    filled: true,
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.transparent),
+                      borderRadius: BorderRadius.circular(10.00),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.transparent),
+                      borderRadius: BorderRadius.circular(10.00),
+                    ),
                   ),
-                  /* validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return  'ingresa un correo';
-                    }
-                    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                      return 'ingrese un correo valido';
-                    }
-                    return null;
-                  }, */
                 ),
+                SizedBox(height: 10,),
                 TextFormField(
                   decoration: InputDecoration(
-                    labelText: 'contraseña',
+                    labelText: 'Contraseña',
+                    labelStyle: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    fillColor: Colors.white,
+                    filled: true,
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.transparent),
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.transparent),
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
                   ),
                   obscureText: true,
-                  /* validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'ingrese su contraseña';
-                    }
-                    return null;
-                  }, */
                 ),
-                Row(
-                  children: [
-                    Text('No tienes cuenta'),
-                    TextButton(
-                      onPressed: _submitRegister,
-                      child: Text('registrate')),
-                  ],
-                  //aca va a ir para el registro
-                ),
-                SizedBox(height: 20),
+                SizedBox(height: 40,),
                 ElevatedButton(
-                  onPressed: _submitForm, 
-                  child: Text('iniciar sesión'),
+                  onPressed: _submitForm,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromARGB(255, 197, 150, 19),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    padding: EdgeInsets.symmetric(vertical: 16.0),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Iniciar Sesión',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      SizedBox(width: 10,),
+                      Icon(
+                        Icons.arrow_forward, 
+                        color: Colors.white,
+                      ),
+                    ],
+                  ),
                 ),
+                SizedBox(height: 40,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Aún no tienes una cuenta?'),
+                    TextButton(
+                      onPressed: _submitRegister, 
+                      child: Text(
+                        'Registrate',
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 197, 150, 19),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
               ],
             ),
           ),
