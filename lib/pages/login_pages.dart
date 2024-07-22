@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -21,49 +22,59 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  void _submitForm() async {
-    if (_formKey.currentState!.validate()) {
-      final email = _emailController.text;
-      final password = _passwordController.text;
+Future<void> _submitForm() async {
+      if (_formKey.currentState!.validate()) {
+    final email = _emailController.text;
+    final password = _passwordController.text;
 
-      final url = Uri.parse('http://100.29.145.149:3000/students/login');
+    var headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    };
 
-      try {
-        final response = await http.post(
-          url,
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-          body: jsonEncode({
-            'email': email,
-            'password': password,
-          }),
-        );
+    var url = Uri.parse('http://100.29.145.149:3000/students/login');
 
-        if (response.statusCode == 200) {
-          // Inicio de sesión exitoso, navegar a la pantalla de inicio
-          Navigator.pushReplacementNamed(context, '/');
-        } else if (response.statusCode == 404) {
-          // Email o contraseña no encontrados
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Correo o contraseña incorrectos')),
-          );
-        } else {
-          final responseBody = jsonDecode(response.body);
-          print('Error: ${response.statusCode} - ${responseBody['message']}');
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error en el inicio de sesión: ${responseBody['message']}')),
-          );
-        }
-      } catch (e) {
-        print('Exception: $e');
+    try {
+      final response = await http.post(
+        url,
+        headers: headers,
+        body: json.encode({
+          "email": email,
+          "password": password
+        })
+      );
+
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final userData = jsonDecode(response.body);
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('isLoggedIn', true);
+        
+        // Save user data
+        await prefs.setString('userId', userData['id'].toString());
+        await prefs.setString('firstName', userData['firstName'] ?? '');
+        await prefs.setString('lastName', userData['lastName'] ?? '');
+        await prefs.setString('email', userData['email'] ?? '');
+        
+        print('User data saved. ID: ${userData['id']}');
+
+        Navigator.pushNamed(context, '/');
+      } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error en el inicio de sesión: $e')),
+          SnackBar(content: Text('Error en el inicio de sesión: ${response.reasonPhrase}')),
         );
       }
+    } catch (e) {
+      print('Exception: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error en el inicio de sesión: $e')),
+      );
     }
   }
+  }
+  
 
   void _navigateToRegister() {
     Navigator.pushNamed(context, '/register');
@@ -73,7 +84,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Color.fromARGB(255, 255, 244, 212),
+        color: const Color.fromARGB(255, 255, 244, 212),
         padding: const EdgeInsets.all(16.0),
         child: Center(
           child: SingleChildScrollView(
@@ -82,7 +93,7 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  Text(
+                  const Text(
                     'Inicio de Sesión',
                     textAlign: TextAlign.center,
                     style: TextStyle(
@@ -90,18 +101,18 @@ class _LoginPageState extends State<LoginPage> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Image.asset(
                     'lib/assets/childlogin.gif',
                     height: 260,
                     width: 245,
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   TextFormField(
                     controller: _emailController,
                     decoration: InputDecoration(
                       labelText: 'Correo',
-                      labelStyle: TextStyle(
+                      labelStyle: const TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
                       ),
@@ -126,12 +137,12 @@ class _LoginPageState extends State<LoginPage> {
                       return null;
                     },
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   TextFormField(
                     controller: _passwordController,
                     decoration: InputDecoration(
                       labelText: 'Contraseña',
-                      labelStyle: TextStyle(
+                      labelStyle: const TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
                       ),
@@ -157,19 +168,19 @@ class _LoginPageState extends State<LoginPage> {
                       return null;
                     },
                   ),
-                  SizedBox(height: 40),
+                  const SizedBox(height: 40),
                   ElevatedButton(
                     onPressed: _submitForm,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromARGB(255, 197, 150, 19),
+                      backgroundColor: const Color.fromARGB(255, 197, 150, 19),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
-                      padding: EdgeInsets.symmetric(vertical: 16.0),
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
+                      children: const [
                         Text(
                           'Iniciar Sesión',
                           style: TextStyle(color: Colors.white),
@@ -182,14 +193,14 @@ class _LoginPageState extends State<LoginPage> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 40),
+                  const SizedBox(height: 40),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('¿Aún no tienes una cuenta?'),
+                      const Text('¿Aún no tienes una cuenta?'),
                       TextButton(
                         onPressed: _navigateToRegister,
-                        child: Text(
+                        child: const Text(
                           'Regístrate',
                           style: TextStyle(
                             color: Color.fromARGB(255, 197, 150, 19),

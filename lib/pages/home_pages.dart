@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:motoresenmarcha/pages/login_pages.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -15,6 +15,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
   late AnimationController _controller;
   late Animation<double> _rotationAnimation;
   late Animation<double> _textScaleAnimation;
+  bool isLoggedIn = false;
 
   @override
   void initState() {
@@ -29,6 +30,14 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     _textScaleAnimation = Tween<double>(begin: 1, end: 0).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
+    _checkLoginStatus();
+  }
+
+  Future<void> _checkLoginStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+    });
   }
 
   @override
@@ -48,6 +57,14 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     });
   }
 
+  void _navigateToPage(String route) {
+    if (isLoggedIn) {
+      Navigator.pushNamed(context, route);
+    } else {
+      Navigator.pushNamed(context, '/login');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,10 +81,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
               size: 50.0,
             ),
             onPressed: () {
-              Navigator.push(
-                context, 
-                MaterialPageRoute(builder: (context) => LoginPage()),
-              );
+              _navigateToPage('/perfil');
             },
           ),
         ],
@@ -79,18 +93,19 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
           });
           switch (index) {
             case 0:
+              _navigateToPage('/check');
               break;
             case 1:
-              Navigator.pushNamed(context, '/juegos');
+              _navigateToPage('/juegos');
               break;
             case 2:
               Navigator.pushNamed(context, '/');
               break;
             case 3:
-              Navigator.pushNamed(context, '/cursos');
+              _navigateToPage('/cursos'); 
               break;
             case 4:
-              Navigator.pushNamed(context, '/logros');
+              _navigateToPage('/logros');
               break;
           }
         },
@@ -221,26 +236,6 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
               ),
             ),
             const SizedBox(height: 8),
-            Card(
-              child: ListTile(
-                leading: Image.network('https://www.lateralidadypsicologiallorens.com/wp-content/uploads/2024/01/observacion-dibujo-ninos-lateralidad.jpg'),
-                title: const Text('Title recurse'),
-                subtitle: const Text(
-                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed auctor, justo id tincidunt lacinia.',
-                ),
-              ),
-            ),
-            const SizedBox(height: 8),
-            Card(
-              child: ListTile(
-                leading: Image.network('https://www.lateralidadypsicologiallorens.com/wp-content/uploads/2024/01/observacion-dibujo-ninos-lateralidad.jpg'),
-                title: const Text('Title recurse'),
-                subtitle: const Text(
-                  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed auctor, justo id tincidunt lacinia.',
-                ),
-              ),
-            ),
-            const SizedBox(height: 8,),
             Card(
               child: ListTile(
                 leading: Image.network('https://www.lateralidadypsicologiallorens.com/wp-content/uploads/2024/01/observacion-dibujo-ninos-lateralidad.jpg'),

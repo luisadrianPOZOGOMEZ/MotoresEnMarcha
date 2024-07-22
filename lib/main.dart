@@ -5,7 +5,8 @@ import 'package:motoresenmarcha/pages/juegos_pages.dart';
 import 'package:motoresenmarcha/pages/login_pages.dart'; 
 import 'package:motoresenmarcha/pages/logros_pages.dart'; 
 import 'package:motoresenmarcha/pages/register_pages.dart';
-
+import 'package:motoresenmarcha/pages/perfil_pages.dart'; 
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +15,11 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  Future<bool> _checkLoginStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('isLoggedIn') ?? false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -23,15 +28,15 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 81, 229, 255)),
         useMaterial3: true,
       ),
-      //home: const MyHomePage(),
       initialRoute: '/',
       routes: {
-        '/':(context) => const MyHomePage(),
+        '/': (context) => const MyHomePage(),
         '/login': (context) => const LoginPage(),
         '/register': (context) => RegisterPage(),
         '/juegos': (context) => const JuegosPage(),
         '/logros': (context) => const LogrosPage(),
         '/cursos': (context) => const CursosPage(),
+        '/perfil': (context) => PerfilPage(),
       },
     );
   }
