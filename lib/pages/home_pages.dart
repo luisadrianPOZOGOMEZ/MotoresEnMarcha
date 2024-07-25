@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -61,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     if (isLoggedIn) {
       Navigator.pushNamed(context, route);
     } else {
-      Navigator.pushNamed(context, '/login');
+      Navigator.pushReplacementNamed(context, '/login');
     }
   }
 
@@ -93,18 +94,11 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
           });
           switch (index) {
             case 0:
-              _navigateToPage('/check');
+              _navigateToPage('/cursos');
               break;
             case 1:
-              _navigateToPage('/juegos');
               break;
             case 2:
-              Navigator.pushNamed(context, '/');
-              break;
-            case 3:
-              _navigateToPage('/cursos'); 
-              break;
-            case 4:
               _navigateToPage('/logros');
               break;
           }
@@ -112,7 +106,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
         indicatorColor: Color.fromARGB(0, 78, 66, 212),
         selectedIndex: currentPageIndex,
         destinations: const <Widget>[
-          NavigationDestination(
+          /* NavigationDestination(
             selectedIcon: Icon(Icons.menu_book),
             icon: Icon(Icons.menu_book),
             label: "Ejercicios",
@@ -121,16 +115,16 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
             selectedIcon: Icon(Icons.home),
             icon: Icon(Icons.home),
             label: "Juegos",
+          ), */
+          NavigationDestination(
+            selectedIcon: Icon(Icons.library_books),
+            icon: Icon(Icons.library_books),
+            label: "Cursos",
           ),
           NavigationDestination(
             selectedIcon: Icon(Icons.home),
             icon: Icon(Icons.home),
             label: "Home",
-          ),
-          NavigationDestination(
-            selectedIcon: Icon(Icons.library_books),
-            icon: Icon(Icons.library_books),
-            label: "Cursos",
           ),
           NavigationDestination(
             selectedIcon: Icon(Icons.emoji_events),

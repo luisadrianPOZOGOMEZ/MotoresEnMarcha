@@ -60,7 +60,7 @@ Future<void> _submitForm() async {
         
         print('User data saved. ID: ${userData['id']}');
 
-        Navigator.pushNamed(context, '/');
+        Navigator.pushReplacementNamed(context, '/');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error en el inicio de sesión: ${response.reasonPhrase}')),
@@ -77,7 +77,7 @@ Future<void> _submitForm() async {
   
 
   void _navigateToRegister() {
-    Navigator.pushNamed(context, '/register');
+    Navigator.pushReplacementNamed(context, '/register');
   }
 
   @override
